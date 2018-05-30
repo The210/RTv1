@@ -6,7 +6,7 @@
 #    By: dhorvill <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/07 16:12:44 by dhorvill          #+#    #+#              #
-#    Updated: 2018/05/07 16:15:05 by dhorvill         ###   ########.fr        #
+#    Updated: 2018/05/29 07:47:30 by dhorvill         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = RTv1
 
 LIBFT = libft.a
 
-SRCS = rTv1.c
+SRCS = rTv1.c interactive.c
 
 OBJ = $(SRC=.c:.o)
 
