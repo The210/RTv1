@@ -6,12 +6,65 @@
 /*   By: dhorvill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/29 07:40:28 by dhorvill          #+#    #+#             */
-/*   Updated: 2018/05/30 15:21:47 by dhorvill         ###   ########.fr       */
+/*   Updated: 2018/05/31 12:16:14 by dhorvill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "rTv.h"
+
+t_objects	*change_pos_init(t_objects *objects)
+{
+	int i;
+
+	i = -1;
+	while (++i < objects->sphere_count)
+	{
+		objects->spheres[i].center.x -= objects->camera.pos.x;
+		objects->spheres[i].centeri.x -= objects->camera.pos.x;
+		objects->spheres[i].center.y -= objects->camera.pos.y;
+		objects->spheres[i].centeri.y -= objects->camera.pos.y;
+		objects->spheres[i].center.z -= objects->camera.pos.z;
+		objects->spheres[i].centeri.z -= objects->camera.pos.z;
+	}
+	i = -1;
+	while (++i < objects->plane_count)
+	{
+		objects->planes[i].point.x -= objects->camera.pos.x;
+		objects->planes[i].pointi.x -= objects->camera.pos.x;
+		objects->planes[i].point.y -= objects->camera.pos.y;
+		objects->planes[i].pointi.y -= objects->camera.pos.y;
+		objects->planes[i].point.z -= objects->camera.pos.z;
+		objects->planes[i].pointi.z -= objects->camera.pos.z;
+	}
+	i = -1;
+	while (++i < objects->cyllinder_count)
+	{
+		objects->cyllinders[i].center.x -= objects->camera.pos.x;
+		objects->cyllinders[i].centeri.x -= objects->camera.pos.x;
+		objects->cyllinders[i].center.y -= objects->camera.pos.y;
+		objects->cyllinders[i].centeri.y -= objects->camera.pos.y;
+		objects->cyllinders[i].center.z -= objects->camera.pos.z;
+		objects->cyllinders[i].centeri.z -= objects->camera.pos.z;
+	}
+	i = -1;
+	while (++i < objects->cyllinder_count * 2)
+	{
+		objects->discs[i].center.x -= objects->camera.pos.x;
+		objects->discs[i].centeri.x -= objects->camera.pos.x;
+		objects->discs[i].center.y -= objects->camera.pos.y;
+		objects->discs[i].centeri.y -= objects->camera.pos.y;
+		objects->discs[i].center.z -= objects->camera.pos.z;
+		objects->discs[i].centeri.z -= objects->camera.pos.z;
+	}
+	objects->spot.x -= objects->camera.pos.x;
+	objects->spoti.x -= objects->camera.pos.x;
+	objects->spot.y -= objects->camera.pos.y;
+	objects->spoti.y -= objects->camera.pos.y;
+	objects->spot.z -= objects->camera.pos.z;
+	objects->spoti.z -= objects->camera.pos.z;
+	return (objects);
+}
 
 t_objects	*rotate_matrix(t_objects *objects, int keycode)
 {
@@ -54,7 +107,6 @@ t_objects	*rotate_matrix(t_objects *objects, int keycode)
 		objects->matrix.y3 = tmp.y2 * sin(M_PI / 16) + tmp.y3 * cos(M_PI / 16);
 		objects->matrix.z3 = tmp.z2 * sin(M_PI / 16) + tmp.z3 * cos(M_PI / 16);
 	}
-		printf("%f, %f, %f\n %f, %f, %f\n %f, %f, %f\n", objects->matrix.x1, objects->matrix.y1, objects->matrix.z1, objects->matrix.x2, objects->matrix.y2, objects->matrix.z2, objects->matrix.x3, objects->matrix.y3, objects->matrix.z3); 
 	return (objects);
 }
 
@@ -140,6 +192,40 @@ t_objects	*change_spot_pos(t_objects *objects)
 	objects->spot.y = spot.x * objects->matrix.y1 + spot.y * objects->matrix.y2 + spot.z * objects->matrix.y3; 
 	objects->spot.z = spot.x * objects->matrix.z1 + spot.y * objects->matrix.z2 + spot.z * objects->matrix.z3; 
 	return (objects);
+}
+
+t_objects	*rotate_matrix_init(t_objects *objects)
+{
+	t_matrix	tmp;
+
+	tmp = objects->matrix;
+	objects->camera.rot.x = objects->camera.rot.x * M_PI / 180;
+	objects->camera.rot.y = objects->camera.rot.y * M_PI / 180;
+	if (objects->camera.rot.x != 0)
+	{
+		objects->matrix.x1 = tmp.x1 * cos(objects->camera.rot.x) + tmp.x3 * sin(objects->camera.rot.x);
+		objects->matrix.y1 = tmp.y1 * cos(objects->camera.rot.x) + tmp.y3 * sin(objects->camera.rot.x);
+		objects->matrix.z1 = tmp.z1 * cos(objects->camera.rot.x) + tmp.z3 * sin(objects->camera.rot.x);
+		objects->matrix.x3 = tmp.x1 * -sin(objects->camera.rot.x) + tmp.x3 * cos(objects->camera.rot.x);
+		objects->matrix.y3 = tmp.y1 * -sin(objects->camera.rot.x) + tmp.y3 * cos(objects->camera.rot.x);
+		objects->matrix.z3 = tmp.z1 * -sin(objects->camera.rot.x) + tmp.z3 * cos(objects->camera.rot.x);
+	}
+	tmp = objects->matrix;
+	if (objects->camera.rot.y != 0)
+	{
+		objects->matrix.x2 = tmp.x2 * cos(objects->camera.rot.y) + tmp.x3 * sin(objects->camera.rot.y);
+		objects->matrix.y2 = tmp.y2 * cos(objects->camera.rot.y) + tmp.y3 * sin(objects->camera.rot.y);
+		objects->matrix.z2 = tmp.z2 * cos(objects->camera.rot.y) + tmp.z3 * sin(objects->camera.rot.y);
+		objects->matrix.x3 = tmp.x2 * -sin(objects->camera.rot.y) + tmp.x3 * cos(objects->camera.rot.y);
+		objects->matrix.y3 = tmp.y2 * -sin(objects->camera.rot.y) + tmp.y3 * cos(objects->camera.rot.y);
+		objects->matrix.z3 = tmp.z2 * -sin(objects->camera.rot.y) + tmp.z3 * cos(objects->camera.rot.y);
+	}
+	objects = change_sphere_pos(objects);
+	objects = change_plane_pos(objects);
+	objects = change_cyllinder_pos(objects);
+	objects = change_disc_pos(objects);
+	objects = change_spot_pos(objects);
+	return(objects);
 }
 
 int	interactive(int	keycode, t_objects *objects)

@@ -6,7 +6,7 @@
 /*   By: dhorvill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/23 22:34:03 by dhorvill          #+#    #+#             */
-/*   Updated: 2018/05/30 14:22:08 by dhorvill         ###   ########.fr       */
+/*   Updated: 2018/05/31 09:47:15 by dhorvill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,12 @@ typedef struct	s_coord
 	double	y;
 	double	z;
 }				t_coord;
+
+typedef struct	s_camera
+{
+	t_coord		pos;
+	t_coord		rot;
+}				t_camera;
 
 typedef struct	s_matrix
 {
@@ -103,12 +109,15 @@ typedef struct	s_objects
 	t_coord		spot;
 	t_coord		spoti;
 	t_matrix	matrix;
+	t_camera	camera;
 	int			plane_count;
 	int			cyllinder_count;
 	int			sphere_count;
 }				t_objects;
 
-int		interactive(int keycode, t_objects *objects);
-void	raytracer(t_window window, t_objects objects);
+int			interactive(int keycode, t_objects *objects);
+void		raytracer(t_window window, t_objects objects);
+t_objects	*change_pos_init(t_objects *objects);
+t_objects	*rotate_matrix_init(t_objects *objects);
 
 #endif

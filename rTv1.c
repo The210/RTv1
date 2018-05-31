@@ -6,7 +6,7 @@
 /*   By: dhorvill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/07 16:10:26 by dhorvill          #+#    #+#             */
-/*   Updated: 2018/05/30 14:22:23 by dhorvill         ###   ########.fr       */
+/*   Updated: 2018/05/31 12:16:08 by dhorvill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,13 @@ t_result detect_collition_cyllinder(t_cyllinder cyllinder, t_coord ray)
 	{
 		r1 = (-b - sqrt(delta)) / (2 * a) < (-b + sqrt(delta)) / (2 * a) ?
 			(-b - sqrt(delta)) / (2 * a) : (-b + sqrt(delta)) / (2 * a);
+		if (r1 < 0)
+		{
+			result.x = 0;
+			result.y = 0;
+			result.z = 0;
+			return (result);
+		}
 		result.x = ray.x * r1;
 		result.y = ray.y * r1;
 		result.z = ray.z * r1;
@@ -510,7 +517,7 @@ int	ft_lum_disc(t_disc disc, t_result start, t_coord spot)
 	scal = acos(scal);
 	scal *= (180 / M_PI);
 	if (scal < 90)
-		return (round(255 - (scal * 255 / 90)) * pow(16, 4));
+		return (round(255 - (scal * 255 / 90)) * pow(16, 2));
 	else
 		return (0);
 }
@@ -572,7 +579,7 @@ int ft_lum_cyllinder(t_cyllinder cyllinder, t_result start, t_coord spot)
 	scal = acos(scal);
 	scal *= (180 / M_PI);
 	if (scal < 90)
-		return (round(255 - (scal * 255 / 90)) * pow(16, 4));
+		return (round(255 - (scal * 255 / 90)) * pow(16, 2));
 	else
 		return (0);
 }
@@ -832,6 +839,7 @@ int	main(int argc, char **argv)
 	int		k;
 	int		kd;
 	int		l;
+	int		camera;
 	double	standard;
 	t_coord	standarized;
 	t_objects	objects;
@@ -841,6 +849,7 @@ int	main(int argc, char **argv)
 	objects.plane_count = 0;
 	j = -1;
 	k = -1;
+	camera = 0;
 	kd = -2;
 	l = -1;
 	objects.matrix.x1 = 1;
@@ -873,6 +882,8 @@ int	main(int argc, char **argv)
 			objects.plane_count++;
 			arguments += 7;
 		}
+		else if (ft_strcmp(argv[i], "Camera") == 0)
+			arguments += 6;
 	}
 	if (argc != arguments)
 	{	
@@ -955,6 +966,25 @@ int	main(int argc, char **argv)
 			objects.planes[l].pointi = objects.planes[l].point;
 			objects.planes[l].normi = objects.planes[l].norm;
 		}
+		else if (ft_strcmp(argv[i], "Camera") == 0)
+		{
+			if (camera == 1)
+			{
+				ft_putendl("Please assign a single camera.");
+				return (0);
+			}
+			camera = 1;
+			objects.camera.pos.x = atof(argv[i + 1]);
+			objects.camera.pos.y = atof(argv[i + 2]);
+			objects.camera.pos.z = atof(argv[i + 3]);
+			objects.camera.rot.x = atof(argv[i + 4]);
+			objects.camera.rot.y = atof(argv[i + 5]);
+		}
+	}
+	if (camera == 1)
+	{
+		change_pos_init(&objects);
+		rotate_matrix_init(&objects);
 	}
 	objects.window.mlx = mlx_init();
 	objects.window.win = mlx_new_window(objects.window.mlx, 1000, 1000, "RTv1");

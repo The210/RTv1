@@ -1,0 +1,1 @@
+./RTv1 0 0 -6 Plane 0 0 5 0 0 1 Plane 5 0 0 1 0 0 Plane -5 0 0 1 0 0 Plane 0 -5 0 0 1 0 Sphere -0.7 0.7 0.7 0.3 Sphere -0.7 0.7 -0.7 0.3 Sphere -0.7 -0.7 0.7 0.3 Sphere -0.7 -0.7 -0.7 0.3 Sphere 0.7 0.7 0.7 0.3 Sphere 0.7 0.7 -0.7 0.3 Sphere 0.7 -0.7 0.7 0.3 Sphere 0.7 -0.7 -0.7 0.3 Camera 4 4 -4 -45 -45
